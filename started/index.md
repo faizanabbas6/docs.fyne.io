@@ -225,6 +225,45 @@ You now need to download the Fyne module and helper tool. This will be done usin
 
     $ go get fyne.io/fyne/v2@latest
     $ go install fyne.io/fyne/v2/cmd/fyne@latest
+# Handling Permission Issues for Adding `fyne` Binaries to `bin` Folder in Linux
+
+On Linux, you may encounter permission issues when adding `fyne` binaries to the `bin` folder if the `go` folder is owned by `root`. Here are two methods to handle this:
+
+## Method 1: Temporarily Change Ownership of `bin` Directory
+
+```sh
+sudo chown $USER /usr/local/go/bin
+go install fyne.io/fyne/v2/cmd/fyne@latest
+sudo chown root /usr/local/go/bin
+```
+## Method 2: Use `GOPATH` and `GOBIN`
+
+1. **Create a `bin` folder in your `GOPATH`:**
+
+    ```sh
+    mkdir -p ~/go/bin
+    ```
+
+2. **Set `GOBIN` to this path and make it persistent:**
+
+    ```sh
+    echo 'export GOBIN=~/go/bin' >> ~/.zshrc
+    source ~/.zshrc
+    ```
+
+3. **Install `fyne` binary:**
+
+    ```sh
+    go install fyne.io/fyne/v2/cmd/fyne@latest
+    ```
+
+4. **Move binaries to `GOROOT` `bin` folder:**
+
+    ```sh
+    sudo mv ~/go/bin/fyne /usr/local/go/bin
+    ```
+
+This ensures you can install `fyne` binaries without permission issues.
 
 If you are unsure of how Go modules work, consider reading [Tutorial: Create a Go module](https://golang.org/doc/tutorial/create-module).
 
